@@ -13,6 +13,14 @@ app.use(bodyParser.json());
 // Creates a client
 const storage = new Storage();
 
+const entityNameMapping = {
+  'INE': 'National Electoral Institute ID',
+  'ReciboLuz': 'Electricity Bill',
+  'ConstanciaFiscal': 'Fiscal Certificate',
+  'ReciboTelefono': 'Telephone Bill',
+  // Add more mappings as needed
+};
+
 async function saveToBucket(bucketName, url, destinationBlobName, senderId, pageId) {
   const bucket = storage.bucket(bucketName);
   const file = bucket.file(destinationBlobName);
@@ -63,11 +71,12 @@ async function saveToBucket(bucketName, url, destinationBlobName, senderId, page
   // Process the document with the custom extractor
   const document = await processDocumentWithCustomExtractor('documentprincipal', 'us', customExtractorId, destinationBlobName);
 
-  const entities = document.entities.map(entity => `${entity.type}: ${entity.mentionText}`);
-  console.log('Entities:', entities.join(', '));
+  const entities = document.entities.map(entity => `${entityNameMapping[entity.type] || entity.type}: ${entity.mentionText}`);
+  const formattedEntities = entities.join('\n');
+  console.log('Entities:\n', formattedEntities);
 
   // Send a response back to the user
-  const messageText = `The entities in your document are: ${entities.join(', ')}`;
+  const messageText = `The entities in your document are:\n${formattedEntities}\nThe document label is: ${highestConfidenceLabel}`;
   await sendResponse(senderId, pageId, messageText);
 }
 
