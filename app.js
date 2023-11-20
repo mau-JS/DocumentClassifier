@@ -48,10 +48,10 @@ async function saveToBucket(bucketName, url, destinationBlobName, senderId, page
       customExtractorId = '9a8c87892a6f4500';
       break;
     case 'ReciboLuz':
-      customExtractorId = 'c20f527ea17f5d5f';
+      customExtractorId = 'f1cfac8adff82562';
       break;
     case 'ConstanciaFiscal':
-      customExtractorId = 'ec2a4b2ae9b1054e';
+      customExtractorId = '10d09c4cbadab226';
       break;
     case 'ReciboTelefono':
       customExtractorId = '328004a6d5b483e1';
