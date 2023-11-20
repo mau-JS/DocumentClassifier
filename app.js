@@ -21,6 +21,7 @@ const entityNameMapping = {
   // Add more mappings as needed
 };
 
+
 async function saveToBucket(bucketName, url, destinationBlobName, senderId, pageId) {
   const bucket = storage.bucket(bucketName);
   const file = bucket.file(destinationBlobName);
@@ -76,8 +77,10 @@ async function saveToBucket(bucketName, url, destinationBlobName, senderId, page
   console.log('Entities:\n', formattedEntities);
 
   // Send a response back to the user
-  const messageText = `The entities in your document are:\n${formattedEntities}\nThe document label is: ${highestConfidenceLabel}`;
-  await sendResponse(senderId, pageId, messageText);
+// Send a response back to the user
+const messageText = `Your document was identified as your ${entityNameMapping[highestConfidenceLabel] || highestConfidenceLabel}\nThe content of your document is the following:\n${formattedEntities}`;
+await sendResponse(senderId, pageId, messageText);
+
 }
 
 async function classifyDocument(bucketName, fileName, projectId, location, processorId) {
