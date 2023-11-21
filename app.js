@@ -36,6 +36,15 @@ const ineEntityNameMapping = {
   // Add more mappings as needed
 };
 
+const constanciaFiscalEntityNameMapping = {
+  'CURP': 'Código Único de Registro de Población (CURP)',
+  'Nombre': 'Name',
+  'PrimerApellido': 'First Surname',
+  'RFC': 'Federal Taxpayer Registry (RFC)',
+  'SegundoApellido': 'Second Surname',
+  // Add more mappings as needed
+};
+
 // Define the order of the entities
 const entityOrder = [
   'Nombre',
@@ -47,6 +56,15 @@ const entityOrder = [
   'Clave de Elector',
   'Vigencia',
   'Código Único de Registro de Población (CURP)'
+];
+
+// Define the order of the entities for ConstanciaFiscal
+const constanciaFiscalEntityOrder = [
+  'Nombre',
+  'PrimerApellido',
+  'SegundoApellido',
+  'Código Único de Registro de Población (CURP)',
+  'Federal Taxpayer Registry (RFC)'
 ];
 
 async function saveToBucket(bucketName, url, destinationBlobName, senderId, pageId) {
@@ -104,6 +122,10 @@ async function saveToBucket(bucketName, url, destinationBlobName, senderId, page
     // Sort the entities based on the defined order
     const sortedEntities = document.entities.sort((a, b) => entityOrder.indexOf(a.type) - entityOrder.indexOf(b.type));
     entities = sortedEntities.map(entity => `${ineEntityNameMapping[entity.type] || entity.type}: ${entity.mentionText}`);
+  } else if (highestConfidenceLabel === 'ConstanciaFiscal') {
+    // Sort the entities based on the defined order for ConstanciaFiscal
+    const sortedEntities = document.entities.sort((a, b) => constanciaFiscalEntityOrder.indexOf(a.type) - constanciaFiscalEntityOrder.indexOf(b.type));
+    entities = sortedEntities.map(entity => `${constanciaFiscalEntityNameMapping[entity.type] || entity.type}: ${entity.mentionText}`);
   } else {
     entities = document.entities.map(entity => `${entityNameMapping[entity.type] || entity.type}: ${entity.mentionText}`);
   }
@@ -225,7 +247,7 @@ app.post('/webhook', async (req, res) => {
     console.log('File URL:', url);
 
     const bucketName = 'mybucket124';  // TODO: replace with your bucket name
-    const destinationBlobName = 'test.pdf';  // TODO: replace with the name you want to give to the object in your bucket
+    const destinationBlobName = 'test.pdf';  // TODO: replace with
 
     saveToBucket(bucketName, url, destinationBlobName, senderId, pageId).catch(console.error);
   });
