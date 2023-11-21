@@ -21,6 +21,33 @@ const entityNameMapping = {
   // Add more mappings as needed
 };
 
+const ineEntityNameMapping = {
+  'birthDate': 'Fecha de Nacimiento',
+  'claveElector': 'Clave de Elector',
+  'CURP': 'Código Único de Registro de Población (CURP)',
+  'Domicilio': 'Domicilio',
+  'edad': 'Edad',
+  'id': 'ID',
+  'Name': 'Nombre',
+  'ocr': 'Texto OCR',
+  'Surname1': 'Apellido Paterno',
+  'Surname2': 'Apellido Materno',
+  'vigencia': 'Vigencia',
+  // Add more mappings as needed
+};
+
+// Define the order of the entities
+const entityOrder = [
+  'Nombre',
+  'Apellido Paterno',
+  'Apellido Materno',
+  'Fecha de Nacimiento',
+  'Domicilio',
+  'ID',
+  'Clave de Elector',
+  'Vigencia',
+  'Código Único de Registro de Población (CURP)'
+];
 
 async function saveToBucket(bucketName, url, destinationBlobName, senderId, pageId) {
   const bucket = storage.bucket(bucketName);
@@ -72,15 +99,20 @@ async function saveToBucket(bucketName, url, destinationBlobName, senderId, page
   // Process the document with the custom extractor
   const document = await processDocumentWithCustomExtractor('documentprincipal', 'us', customExtractorId, destinationBlobName);
 
-  const entities = document.entities.map(entity => `${entityNameMapping[entity.type] || entity.type}: ${entity.mentionText}`);
+  let entities;
+  if (highestConfidenceLabel === 'INE') {
+    // Sort the entities based on the defined order
+    const sortedEntities = document.entities.sort((a, b) => entityOrder.indexOf(a.type) - entityOrder.indexOf(b.type));
+    entities = sortedEntities.map(entity => `${ineEntityNameMapping[entity.type] || entity.type}: ${entity.mentionText}`);
+  } else {
+    entities = document.entities.map(entity => `${entityNameMapping[entity.type] || entity.type}: ${entity.mentionText}`);
+  }
   const formattedEntities = entities.join('\n');
   console.log('Entities:\n', formattedEntities);
 
   // Send a response back to the user
-// Send a response back to the user
-const messageText = `Your document was identified as your ${entityNameMapping[highestConfidenceLabel] || highestConfidenceLabel}\nThe content of your document is the following:\n${formattedEntities}`;
-await sendResponse(senderId, pageId, messageText);
-
+  const messageText = `Your document was identified as your ${entityNameMapping[highestConfidenceLabel] || highestConfidenceLabel}\nThe content of your document is the following:\n${formattedEntities}`;
+  await sendResponse(senderId, pageId, messageText);
 }
 
 async function classifyDocument(bucketName, fileName, projectId, location, processorId) {
