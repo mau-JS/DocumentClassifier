@@ -242,7 +242,7 @@ app.post('/webhook', async (req, res) => {
   console.log('Sender PSID:', senderId);
 
   // Loop through each attachment and log the URL
-  attachments.forEach(async (attachment) => {
+  const promises = attachments.map((attachment) => {
     const filePayload = attachment.payload;
     const url = filePayload.url;
     console.log('File URL:', url);
@@ -250,10 +250,16 @@ app.post('/webhook', async (req, res) => {
     const bucketName = 'mybucket124';  // TODO: replace with your bucket name
     const destinationBlobName = 'test.pdf';  // TODO: replace with
 
-    saveToBucket(bucketName, url, destinationBlobName, senderId, pageId).catch(console.error);
+    return saveToBucket(bucketName, url, destinationBlobName, senderId, pageId);
   });
 
-  res.sendStatus(200);
+  try {
+    await Promise.all(promises);
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
 });
 
 app.listen(3000, () => {
