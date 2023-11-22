@@ -218,7 +218,8 @@ async function processDocumentWithCustomExtractor(projectId, location, processor
 }
 
 async function sendResponse(psid, pageId, messageText) {
-  const url = `https://graph.facebook.com/v13.0/me/messages?access_token=EAAKExSNuM4MBO93qB4qZCb2g29LfqLYnzn7i7U1qR2mVQNObgigpf9wmg4xnOa0zai9eYU7T1SRhcVKXohZAsA4DspXT5ecAIbySZCyblRBQYrCXNshf2gkjFHiuEKyNW0I7MIuXiHTFZCoPzfIDXei3meJ8gtX7wXxEbDpQKCHEwvCVYXx0JvgSYRreLVW3T75LxrQ6`;
+  /*const url = `https://graph.facebook.com/v13.0/me/messages?access_token=EAAKExSNuM4MBO93qB4qZCb2g29LfqLYnzn7i7U1qR2mVQNObgigpf9wmg4xnOa0zai9eYU7T1SRhcVKXohZAsA4DspXT5ecAIbySZCyblRBQYrCXNshf2gkjFHiuEKyNW0I7MIuXiHTFZCoPzfIDXei3meJ8gtX7wXxEbDpQKCHEwvCVYXx0JvgSYRreLVW3T75LxrQ6`;*/
+  const url = `https://graph.facebook.com/v13.0/me/messages?access_token=EAAt6yn8KTwoBO7XB6lrUDw7pBTkhPZAq4LLCuln3MFRHWiWeDyZAtc9V7yHUC7g63Vv8ZCUZBElG0yL9mameGU6qt1w4sgH5P5YWj4fRKdvdCPZAXNUl1rK6rvDbs46Y01C9SpIhFfqADMJeNZBFhPEw5fNcUvV9mYUcmmZAIGIjOlnGvXGfZBUsclBrC9gZBZBQ8U5r5jySAAWs4vOXRw`;
   const payload = {
     recipient: {
       id: psid
