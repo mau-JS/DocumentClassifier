@@ -6,7 +6,7 @@ This is a **Node.js** backend that integrates with **Dialogflow CX** and **Googl
 * Accepts Documents via Facebook Messenger.
 * Saves documents to Google Cloud Storage.
 * Classifies documents using **Google Document AI**.
-* Extract relevant information based on document received.
+* Extract relevant information based on document received from user.
 * It returns the read data to the user to verify the data was read properly.
 
 ## Technologies Used
